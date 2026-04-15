@@ -1,12 +1,12 @@
-import game.Game;
+import controller.GameController;
 
 public class Main {
     public static void main(String[] args){
-        Game game = new Game();
+        GameController gameController = new GameController();
 
         try{
-            while(game.gameIsOn){
-                game.startNewGame();
+            while(gameController.gameIsOn){
+                gameController.startNewGame();
             }
 
         } catch (Exception e){
