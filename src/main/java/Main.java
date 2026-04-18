@@ -1,16 +1,11 @@
-import controller.GameController;
+import service.*;
 
 public class Main {
     public static void main(String[] args){
-        GameController gameController = new GameController();
+            GameService gameService = GameService.getInstance();
 
-        try{
-            while(gameController.gameIsOn){
-                gameController.startNewGame();
-            }
-
-        } catch (Exception e){
-         //внеплановое завершение игры
-        }
+            //представим что в будущем его можно будет вызвать много раз для разных пользователей, пока что все в однопоточном режиме
+            gameService.startNewGameSession();
     }
+
 }
