@@ -35,7 +35,7 @@ public class Game {
     }
 
     public void startNewGame(){
-
+        userSelection();
         guessing();
     }
 
