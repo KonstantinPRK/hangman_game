@@ -5,7 +5,7 @@ public class GameSession {
     private int sessionID;
     private boolean gameIsOn;
     private int level;
-    private String currentWord;
+    private String currentTopic, currentWord;
 
     public GameSession(){
         this.sessionID = ++newID;
@@ -20,6 +20,11 @@ public class GameSession {
         return gameIsOn;
     }
 
+    public boolean gameOFF(){
+        gameIsOn = false;
+        return gameIsOn;
+    }
+
     public int getLevel(){
         return level;
     }
@@ -28,11 +33,21 @@ public class GameSession {
         return ++level;
     }
 
-    public void setUserWord(String word){
-        this.currentWord = word;
+    public void setUserTopic(String selectedTopic) {
+        this.currentTopic = selectedTopic;
+    }
+
+    public String getUserTopic(){
+        return currentTopic;
+    }
+
+    public void setUserWord(String selectedWord){
+        this.currentWord = selectedWord;
     }
 
     public String getUserWord(){
         return currentWord;
     }
+
+
 }

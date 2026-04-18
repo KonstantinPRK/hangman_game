@@ -9,11 +9,16 @@ public class Input {
         this.wordLoader = dictionaryLoader;
     }
 
-    public Object getTopicsList() {
+    public String[] getTopicsList() {
         return null;
     }
 
-    public Set<String> getUserTopic() {
+    public String getTopicFromUser() {
+        //возвращает название списка по номеру, полученному от пользователя
         return null;
+    }
+
+    public char getUserRespond(){
+        return 'd';
     }
 }

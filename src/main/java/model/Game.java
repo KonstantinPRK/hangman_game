@@ -1,8 +1,7 @@
 package model;
 
 import utils.*;
-
-import java.util.Set;
+import java.util.Random;
 
 public class Game {
     private final GameSession currentSession;
@@ -23,54 +22,64 @@ public class Game {
 
     public void gameON(){
         try{
-            //игра идет по кругу пока текущему пользователю не надоест
             while(currentSession.gameIsOn()){
                 startNewGame();
             }
-
         } catch (Exception e){
-            //внеплановое завершение игры
             output.somethingWrong();
         }
     }
 
     public void startNewGame(){
-        userSelection();
-        guessing();
+        wordSelection();
+        wordGuessing();
     }
 
-    private void userSelection(){
-        Set<String> selectedTopic = selectionTopic();
-        String selectedWord = selectionWord(selectedTopic);
-
-        currentSession.setUserWord(selectedWord);
+    private void wordSelection(){
+        currentSession.setUserTopic(selectionTopic());
+        currentSession.setUserWord(selectionWord());
         wordConstructor.setWord(currentSession.getUserWord());
     }
 
-    private Set<String> selectionTopic(){
-        output.print("Выберете тему загаданного слова");
-        output.print(input.getTopicsList());
-        return input.getUserTopic();
+    private String selectionTopic(){
+        output.print(
+                "Выберете тему загаданного слова: ",
+                input.getTopicsList()
+        );
+
+        return input.getTopicFromUser(); //от 1 до 24
     }
 
-    private String selectionWord(Set<String> selectedTopic){
-        //рандомайзер
-        return "случайно выбранное слово";
+    private String selectionWord(){
+        Random random = new Random();
+        String[] words = input.getTopicsList();
+
+        int randomWordIndex = random.nextInt(0, words.length);
+        output.print("Определено слово. Угадайте его!");
+
+        return words[randomWordIndex];
     }
 
-    private void guessing(){
-        //не знаю сколько уровней будет, рандомное число
-        while(currentSession.getLevel() <= 20){
-            output.print("что-то печатаем");
+    private void wordGuessing(){
+        while(currentSession.getLevel() <= 10){
+            output.print(
+                    "Выбранная тема: " + currentSession.getUserTopic(),
+                    output.drawHangman(currentSession.getLevel()),
+                    wordConstructor.getCurrentStateWord()
+            );
 
-            //рисует текущего человечка
-            output.showHangmanLevel(11);
+            if(userRespondIsTrue()) currentSession.levelUp();
+        }
 
-            //какая-то логика
+        currentSession.gameOFF();
+    }
 
-            currentSession.levelUp();
+    private boolean userRespondIsTrue(){
+        while(true){
+            char letter = input.getUserRespond();
+            boolean respondIsTrue = wordConstructor.checkRespond(letter);
+            if(respondIsTrue)return true;
         }
     }
-
 
 }
