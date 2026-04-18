@@ -32,6 +32,6 @@ public class GameService {
         Game newGame = new Game(output, input, new WordConstructor(), new GameSession());
         int sessionID = newGame.getSession().getSessionID();
         sessions.put(sessionID, newGame);
-        newGame.gameON();
+        newGame.startNewGame();
     }
 }

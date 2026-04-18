@@ -13,12 +13,20 @@ public class Input {
         return null;
     }
 
-    public String getTopicFromUser() {
+    public String getTopicName(int topicNumber) {
         //возвращает название списка по номеру, полученному от пользователя
         return null;
     }
 
-    public char getUserRespond(){
+    public char getUserChar(){
         return 'd';
+    }
+
+    public int getUserInt() {
+        return 1;
+    }
+
+    public String[] getTopicWords() {
+        return null;
     }
 }
