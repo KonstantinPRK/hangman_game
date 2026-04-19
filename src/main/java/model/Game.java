@@ -5,14 +5,12 @@ import java.util.Random;
 
 public class Game {
     private final GameSession currentSession;
-    private final WordConstructor wordConstructor;
-    private final Output output;
-    private final Input input;
+    private final WordConstructor word;
+    private final Terminal terminal;
 
-    public Game(Output output, Input input, WordConstructor word, GameSession session){
-        this.wordConstructor = word;
-        this.output = output;
-        this.input = input;
+    public Game(Terminal terminal, WordConstructor word, GameSession session){
+        this.word = word;
+        this.terminal = terminal;
         this.currentSession = session;
     }
 
@@ -30,7 +28,7 @@ public class Game {
                 endOfGame();
             }
         } catch (Exception e){
-            output.somethingWrong();
+            terminal.print("Что-то пошло не так");
         }
     }
 
@@ -38,27 +36,25 @@ public class Game {
     private void selectWord(){
         currentSession.setUserTopic(selectionTopic());
         currentSession.setUserWord(selectionWord());
-        wordConstructor.setNewWord(currentSession.getUserWord());
+        word.setNewWord(currentSession.getUserWord());
     }
 
 
     private String selectionTopic(){
-        output.print(
-                "Выберете тему загаданного слова: ",
-                input.getTopicsList()
-        );
+        terminal.print("Выберете тему загаданного слова: ");
+        terminal.getTopicsList();
 
-        int topicNumber = input.getUserInt();
-        return input.getTopicName(topicNumber); //от 1 до 24
+        int topicNumber = terminal.getUserInt();
+        return terminal.getTopicName(topicNumber); //от 1 до 24
     }
 
 
     private String selectionWord(){
         Random random = new Random();
-        String[] words = input.getTopicWords();
+        String[] words = terminal.getTopicWords();
 
         int randomWordIndex = random.nextInt(0, words.length);
-        output.print("Определено слово. Угадайте его!");
+        terminal.print("Определено слово. Угадайте его!");
 
         return words[randomWordIndex];
     }
@@ -66,35 +62,36 @@ public class Game {
 
     private void guessWord(){
         while(currentSession.getLevel() <= 10){
-            output.print(
-                    "Выбранная тема: " + currentSession.getUserTopic(),
-                    wordConstructor.drawHangman(currentSession.getLevel()),
-                    wordConstructor.getCurrentStateWord()
-            );
-            if(userRespondIsTrue()){
-
-            } else {
-                currentSession.deathIsCloser();
-            }
+            displayUserInterface();
+            checkUserRespondAndUpdate();
         }
     }
 
-    //переделаю, есть ошибка в логике
-    private boolean userRespondIsTrue(){
-        while(true){
-            char letter = input.getUserChar();
-            boolean respondIsTrue = wordConstructor.checkRespond(letter);
-            if(respondIsTrue) return true;
+    private void displayUserInterface(){
+        terminal.print("Выбранная тема: " + currentSession.getUserTopic());
+        terminal.print(word.drawHangman(currentSession.getLevel()));
+        terminal.print(word.getCurrentStateWord());
+        terminal.print("Введите символ: ");
+    }
+
+    private void checkUserRespondAndUpdate(){
+        char letter = terminal.getUserChar();
+        if(word.isLetterExist(letter)) {
+            word.update(letter);
+            terminal.print("Выбрана верная буква");
+        } else {
+            currentSession.deathIsCloser();
+            terminal.print("Неправильный ответ");
         }
     }
 
 
     private void endOfGame(){
-        output.print("Хотите начать заново ? (y / n)");
-        boolean isEnd = input.getUserChar() == 'y';
+        terminal.print("Хотите начать заново ? (y / n)");
+        boolean isEnd = terminal.getUserChar() == 'y';
         if(isEnd){
             currentSession.gameOFF();
-            output.print("Игра завершена");
+            terminal.print("Игра завершена");
         }
     }
 

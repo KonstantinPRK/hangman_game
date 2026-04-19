@@ -2,7 +2,7 @@ package model;
 
 public class GameSession {
     private static int newID = 0;
-    private int sessionID;
+    private final int sessionID;
     private boolean gameIsOn;
     private int level;
     private String currentTopic, currentWord;
@@ -12,26 +12,29 @@ public class GameSession {
         gameIsOn = true;
     }
 
+
     public int getSessionID(){
         return sessionID;
     }
+
 
     public boolean gameIsOn(){
         return gameIsOn;
     }
 
-    public boolean gameOFF(){
+    public void gameOFF(){
         gameIsOn = false;
-        return gameIsOn;
     }
+
 
     public int getLevel(){
         return level;
     }
 
-    public int deathIsCloser(){
-        return ++level;
+    public void deathIsCloser(){
+        ++level;
     }
+
 
     public void setUserTopic(String selectedTopic) {
         this.currentTopic = selectedTopic;
@@ -41,6 +44,7 @@ public class GameSession {
         return currentTopic;
     }
 
+
     public void setUserWord(String selectedWord){
         this.currentWord = selectedWord;
     }
@@ -48,6 +52,5 @@ public class GameSession {
     public String getUserWord(){
         return currentWord;
     }
-
 
 }

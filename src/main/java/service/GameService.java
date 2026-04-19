@@ -2,13 +2,12 @@ package service;
 
 import model.*;
 import utils.*;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class GameService {
+    //пока что sessions никак не используется
     private Map<Integer, Game> sessions;
-    private Output output;
-    private Input input;
+    private Terminal terminal;
 
     private static GameService gameService;
     public static GameService getInstance() {
@@ -22,14 +21,15 @@ public class GameService {
         initialize();
     }
 
+
     private void initialize(){
         sessions = new HashMap<>();
-        output = new Output();
-        input = new Input(new DictionaryLoader());
+        terminal = new Terminal(System.out, new Scanner(System.in), new DictionaryLoader());
     }
 
+
     public void startNewGameSession(){
-        Game newGame = new Game(output, input, new WordConstructor(), new GameSession());
+        Game newGame = new Game(terminal, new WordConstructor(), new GameSession());
         int sessionID = newGame.getSession().getSessionID();
         sessions.put(sessionID, newGame);
         newGame.startNewGame();

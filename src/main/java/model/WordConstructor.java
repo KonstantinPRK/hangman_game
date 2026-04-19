@@ -1,35 +1,54 @@
 package model;
 
+import java.util.*;
+
 public class WordConstructor {
-    private int[] charFrequency;
-    private boolean[] isCharExist;
+    private Map<Character, Deque<Integer>> charIndexes;
+    private char[] currentStateWord;
 
 
     public void setNewWord(String userWord) {
-        charFrequency = new int[33];
-        isCharExist = new boolean[33];
+        initializeWordSpace(userWord);
+        saveCharIndexes(userWord);
+    }
 
+    private void initializeWordSpace(String userWord){
+        charIndexes = new HashMap<>();
+        currentStateWord = new char[userWord.length()];
+        Arrays.fill(currentStateWord, '_');
+    }
+
+    private void saveCharIndexes(String userWord){
+        int index = 0;
         for(char letter : userWord.toCharArray()){
-            int charIndex = letter - 'а'; //кириллическая "а"
-            charFrequency[charIndex]++;
-            isCharExist[charIndex] = true;
+            Character charKey = letter;
+            charIndexes.computeIfAbsent(charKey, k -> new ArrayDeque<>(4)).add(index);
+            index++;
         }
     }
 
+
+    public void update(char letter) {
+        while(charIndexes.get(letter).peek() != null){
+            int charIndex = charIndexes.get(letter).pop();
+            currentStateWord[charIndex] = letter;
+        }
+    }
+
+
     public String getCurrentStateWord() {
-        return null;
+        return new String(currentStateWord);
     }
 
-    public boolean checkRespond(char letter) {
 
-        return true;
+    public boolean isLetterExist(char letter) {
+        return charIndexes.containsKey(letter);
     }
+
 
     public String drawHangman(int level) {
-        String hangman = "";
-        switch (level) {
-            case 1:
-                hangman = """
+        return switch (level) {
+            case 1 -> """
                 +---+
                 |   |
                     |
@@ -39,9 +58,7 @@ public class WordConstructor {
                     |
                 =========
                 """;
-                break;
-            case 2:
-                hangman = """
+            case 2 -> """
                 +---+
                 |   |
                 O   |
@@ -51,9 +68,7 @@ public class WordConstructor {
                     |
                 =========
                 """;
-                break;
-            case 3:
-                hangman = """
+            case 3 -> """
                 +---+
                 |   |
                 O   |
@@ -63,9 +78,7 @@ public class WordConstructor {
                     |
                 =========
                 """;
-                break;
-            case 4:
-                hangman = """
+            case 4 -> """
                 +---+
                 |   |
                 O   |
@@ -75,9 +88,7 @@ public class WordConstructor {
                     |
                 =========
                 """;
-                break;
-            case 5:
-                hangman = """
+            case 5 -> """
                 +---+
                 |   |
                 O   |
@@ -87,9 +98,7 @@ public class WordConstructor {
                     |
                 =========
                 """;
-                break;
-            case 6:
-                hangman = """
+            case 6 -> """
                 +---+
                 |   |
                 O   |
@@ -99,9 +108,7 @@ public class WordConstructor {
                     |
                 =========
                 """;
-                break;
-            case 7:
-                hangman = """
+            case 7 -> """
                 +---+
                 |   |
                 O   |
@@ -111,9 +118,7 @@ public class WordConstructor {
                     |
                 =========
                 """;
-                break;
-            case 8:
-                hangman = """
+            case 8 -> """
                 +---+
                 |   |
                 O   |
@@ -123,9 +128,7 @@ public class WordConstructor {
                     |
                 =========
                 """;
-                break;
-            case 9:
-                hangman = """
+            case 9 -> """
                 +---+
                 |   |
                 O   |
@@ -135,9 +138,7 @@ public class WordConstructor {
                     |
                 =========
                 """;
-                break;
-            case 10:
-                hangman = """
+            case 10 -> """
                 +---+
                 |   |
                 O   |
@@ -148,11 +149,9 @@ public class WordConstructor {
                 =========
                 ВЫ ПРОИГРАЛИ!
                 """;
-                break;
-            default:
-                hangman = "Error";
-        }
-        return hangman;
+            default -> "Error";
+        };
     }
+
 
 }
