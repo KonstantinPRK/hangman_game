@@ -1,7 +1,5 @@
 package utils;
 
-import java.util.Set;
-
 public class Input {
     private final DictionaryLoader wordLoader;
 
@@ -18,6 +16,7 @@ public class Input {
         return null;
     }
 
+    //приводим любую букву к меньшему регистру
     public char getUserChar(){
         return 'd';
     }

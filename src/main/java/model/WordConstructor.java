@@ -1,8 +1,19 @@
 package model;
 
 public class WordConstructor {
+    private int[] charFrequency;
+    private boolean[] isCharExist;
 
-    public void setWord(String userWord) {
+
+    public void setNewWord(String userWord) {
+        charFrequency = new int[33];
+        isCharExist = new boolean[33];
+
+        for(char letter : userWord.toCharArray()){
+            int charIndex = letter - 'а'; //кириллическая "а"
+            charFrequency[charIndex]++;
+            isCharExist[charIndex] = true;
+        }
     }
 
     public String getCurrentStateWord() {
@@ -10,6 +21,7 @@ public class WordConstructor {
     }
 
     public boolean checkRespond(char letter) {
+
         return true;
     }
 
@@ -134,7 +146,7 @@ public class WordConstructor {
                / \\  |
                 XXX
                 =========
-                ИГРА ОКОНЧЕНА!
+                ВЫ ПРОИГРАЛИ!
                 """;
                 break;
             default:

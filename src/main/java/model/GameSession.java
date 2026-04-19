@@ -29,7 +29,7 @@ public class GameSession {
         return level;
     }
 
-    public int levelUp(){
+    public int deathIsCloser(){
         return ++level;
     }
 

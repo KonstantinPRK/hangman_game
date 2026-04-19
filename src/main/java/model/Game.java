@@ -38,7 +38,7 @@ public class Game {
     private void selectWord(){
         currentSession.setUserTopic(selectionTopic());
         currentSession.setUserWord(selectionWord());
-        wordConstructor.setWord(currentSession.getUserWord());
+        wordConstructor.setNewWord(currentSession.getUserWord());
     }
 
 
@@ -71,12 +71,15 @@ public class Game {
                     wordConstructor.drawHangman(currentSession.getLevel()),
                     wordConstructor.getCurrentStateWord()
             );
+            if(userRespondIsTrue()){
 
-            if(userRespondIsTrue()) currentSession.levelUp();
+            } else {
+                currentSession.deathIsCloser();
+            }
         }
     }
 
-
+    //переделаю, есть ошибка в логике
     private boolean userRespondIsTrue(){
         while(true){
             char letter = input.getUserChar();
@@ -87,7 +90,7 @@ public class Game {
 
 
     private void endOfGame(){
-        output.print("Хотите продолжить игру ? (y / n)");
+        output.print("Хотите начать заново ? (y / n)");
         boolean isEnd = input.getUserChar() == 'y';
         if(isEnd){
             currentSession.gameOFF();
