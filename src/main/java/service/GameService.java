@@ -8,6 +8,7 @@ public class GameService {
     //пока что sessions никак не используется
     private Map<Integer, Game> sessions;
     private Terminal terminal;
+    private DictionaryLoader dictionaryLoader;
 
     private static GameService gameService;
     public static GameService getInstance() {
@@ -24,7 +25,8 @@ public class GameService {
 
     private void initialize(){
         sessions = new HashMap<>();
-        terminal = new Terminal(System.out, new Scanner(System.in), new DictionaryLoader());
+        dictionaryLoader = new DictionaryLoader();
+        terminal = new Terminal(System.out, new Scanner(System.in), dictionaryLoader);
     }
 
 

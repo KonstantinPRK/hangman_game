@@ -9,8 +9,14 @@ public class GameSession {
 
     public GameSession(){
         this.sessionID = ++newID;
-        gameIsOn = true;
+        this.gameIsOn = true;
+        this.level = 1;
     }
+
+    public void resetLevel() {
+        this.level = 1;
+    }
+
 
 
     public int getSessionID(){
@@ -31,7 +37,7 @@ public class GameSession {
         return level;
     }
 
-    public void deathIsCloser(){
+    public void incrementMistakes(){
         ++level;
     }
 

@@ -6,31 +6,39 @@ import java.util.Scanner;
 public class Terminal {
     PrintStream printer;
     Scanner scan;
-    private final DictionaryLoader wordLoader;
+    private final DictionaryLoader loader;
 
     public Terminal(PrintStream out, Scanner scanner, DictionaryLoader wordLoader){
         this.printer = out;
         this.scan = scanner;
-        this.wordLoader = wordLoader;
+        this.loader = wordLoader;
     }
+
 
     public void print(Object obj){
        printer.println(obj);
     }
 
 
-    public String[] getTopicsList() {
-        return null;
+    public void printTopicsList() {
+        for(String topic : loader.getTopicsList()){
+            print(topic);
+        }
     }
 
 
     public String getTopicName(int topicNumber) {
-        //возвращает название списка по номеру, полученному от пользователя
-        return null;
+        String variant = "Выберите число от 1 до 24 включительно";
+
+        while((topicNumber < 1) || (topicNumber > 24)){
+            print("Выбрана несуществующая тема. " + variant);
+            topicNumber = getUserInt();
+        }
+
+        return loader.getTopicName(topicNumber);
     }
 
 
-    //приводим любую букву к меньшему регистру, проверяем на символ, пока не получим символ запрашиваем снова с предупреждением
     public char getUserChar(){
         boolean success = false;
         char userChar = '_';
@@ -55,9 +63,11 @@ public class Terminal {
         while (!success) {
             try {
                 userInt = scan.nextInt();
+                scan.nextLine();
                 success = true;
             } catch (Exception e) {
                 print("Ошибка: это не число. Введите ЦЕЛОЕ число: ");
+                scan.nextLine();
             }
         }
 
@@ -65,7 +75,116 @@ public class Terminal {
     }
 
 
-    public String[] getTopicWords() {
-        return null;
+    public String[] getTopicWords(String topic) {
+        return loader.getWords(topic);
+    }
+
+    public void drawHangman(int level) {
+        String hangman = switch (level) {
+            case 1 -> """
+                +---+
+                |   |
+                    |
+                    |
+                    |
+                    |
+                    |
+                =========
+                """;
+            case 2 -> """
+                +---+
+                |   |
+                O   |
+                    |
+                    |
+                    |
+                    |
+                =========
+                """;
+            case 3 -> """
+                +---+
+                |   |
+                O   |
+                |   |
+                    |
+                    |
+                    |
+                =========
+                """;
+            case 4 -> """
+                +---+
+                |   |
+                O   |
+               /|   |
+                    |
+                    |
+                    |
+                =========
+                """;
+            case 5 -> """
+                +---+
+                |   |
+                O   |
+               /|\\  |
+                    |
+                    |
+                    |
+                =========
+                """;
+            case 6 -> """
+                +---+
+                |   |
+                O   |
+               /|\\  |
+               /    |
+                    |
+                    |
+                =========
+                """;
+            case 7 -> """
+                +---+
+                |   |
+                O   |
+               /|\\  |
+               / \\  |
+                    |
+                    |
+                =========
+                """;
+            case 8 -> """
+                +---+
+                |   |
+                O   |
+               /|\\  |
+               / \\  |
+               /    |
+                    |
+                =========
+                """;
+            case 9 -> """
+                +---+
+                |   |
+                O   |
+               /|\\  |
+               / \\  |
+               / \\  |
+                    |
+                =========
+                """;
+            case 10 -> """
+                +---+
+                |   |
+                O   |
+               /|\\  |
+               / \\  |
+               / \\  |
+                XXX
+                =========
+                ВЫ ПРОИГРАЛИ!
+                """;
+            default -> "Error";
+        };
+
+        print(hangman);
     }
 }

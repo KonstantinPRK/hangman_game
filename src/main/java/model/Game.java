@@ -24,8 +24,10 @@ public class Game {
         try{
             while(currentSession.gameIsOn()){
                 selectWord();
-                guessWord();
-                endOfGame();
+                currentSession.resetLevel();
+                playRound();
+                finishRound();
+                offerNewGame();
             }
         } catch (Exception e){
             terminal.print("Что-то пошло не так");
@@ -39,19 +41,18 @@ public class Game {
         word.setNewWord(currentSession.getUserWord());
     }
 
-
     private String selectionTopic(){
         terminal.print("Выберете тему загаданного слова: ");
-        terminal.getTopicsList();
+        terminal.printTopicsList();
+        terminal.print("");
 
         int topicNumber = terminal.getUserInt();
         return terminal.getTopicName(topicNumber); //от 1 до 24
     }
 
-
     private String selectionWord(){
         Random random = new Random();
-        String[] words = terminal.getTopicWords();
+        String[] words = terminal.getTopicWords(currentSession.getUserTopic());
 
         int randomWordIndex = random.nextInt(0, words.length);
         terminal.print("Определено слово. Угадайте его!");
@@ -60,35 +61,45 @@ public class Game {
     }
 
 
-    private void guessWord(){
-        while(currentSession.getLevel() <= 10){
+    private void playRound(){
+        while(currentSession.getLevel() < 10 && !word.isFull()){
             displayUserInterface();
-            checkUserRespondAndUpdate();
+            checkAndUpdate();
+            terminal.drawHangman(currentSession.getLevel());
+        }
+    }
+
+    private void checkAndUpdate(){
+        boolean isLetterCorrect = word.applyLetter(terminal.getUserChar());
+        if (isLetterCorrect) {
+            terminal.print("Верная буква!");
+        } else {
+            currentSession.incrementMistakes();
+            terminal.print("Нет такой буквы");
         }
     }
 
     private void displayUserInterface(){
         terminal.print("Выбранная тема: " + currentSession.getUserTopic());
-        terminal.print(word.drawHangman(currentSession.getLevel()));
+        terminal.drawHangman(currentSession.getLevel());
         terminal.print(word.getCurrentStateWord());
-        terminal.print("Введите символ: ");
+        terminal.print("Введите русскоязычный символ: ");
     }
 
-    private void checkUserRespondAndUpdate(){
-        char letter = terminal.getUserChar();
-        if(word.isLetterExist(letter)) {
-            word.update(letter);
-            terminal.print("Выбрана верная буква");
+
+    private void finishRound(){
+        if (word.isFull()) {
+            terminal.print("Победа! Загаданное слово: " + currentSession.getUserWord());
         } else {
-            currentSession.deathIsCloser();
-            terminal.print("Неправильный ответ");
+            terminal.print("Поражение. Слово было: " + currentSession.getUserWord());
         }
     }
 
 
-    private void endOfGame(){
+    private void offerNewGame() {
         terminal.print("Хотите начать заново ? (y / n)");
-        boolean isEnd = terminal.getUserChar() == 'y';
+        boolean isEnd = terminal.getUserChar() != 'y';
+
         if(isEnd){
             currentSession.gameOFF();
             terminal.print("Игра завершена");

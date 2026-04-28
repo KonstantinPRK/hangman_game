@@ -3,6 +3,7 @@ package model;
 import java.util.*;
 
 public class WordConstructor {
+    private int balanceOfsymbols;
     private Map<Character, Deque<Integer>> charIndexes;
     private char[] currentStateWord;
 
@@ -13,6 +14,7 @@ public class WordConstructor {
     }
 
     private void initializeWordSpace(String userWord){
+        balanceOfsymbols = userWord.length();
         charIndexes = new HashMap<>();
         currentStateWord = new char[userWord.length()];
         Arrays.fill(currentStateWord, '_');
@@ -28,130 +30,27 @@ public class WordConstructor {
     }
 
 
-    public void update(char letter) {
-        while(charIndexes.get(letter).peek() != null){
-            int charIndex = charIndexes.get(letter).pop();
-            currentStateWord[charIndex] = letter;
+    public boolean applyLetter(char letter) {
+        Deque<Integer> positions = charIndexes.get(letter);
+        if (charIndexes.get(letter) == null || positions.isEmpty()) {
+            return false;
         }
+
+        while (!positions.isEmpty()) {
+            int index = positions.pop();
+            currentStateWord[index] = letter;
+            balanceOfsymbols--;
+        }
+        return true;
+    }
+
+
+    public boolean isFull(){
+        return balanceOfsymbols == 0;
     }
 
 
     public String getCurrentStateWord() {
         return new String(currentStateWord);
     }
-
-
-    public boolean isLetterExist(char letter) {
-        return charIndexes.containsKey(letter);
-    }
-
-
-    public String drawHangman(int level) {
-        return switch (level) {
-            case 1 -> """
-                +---+
-                |   |
-                    |
-                    |
-                    |
-                    |
-                    |
-                =========
-                """;
-            case 2 -> """
-                +---+
-                |   |
-                O   |
-                    |
-                    |
-                    |
-                    |
-                =========
-                """;
-            case 3 -> """
-                +---+
-                |   |
-                O   |
-                |   |
-                    |
-                    |
-                    |
-                =========
-                """;
-            case 4 -> """
-                +---+
-                |   |
-                O   |
-               /|   |
-                    |
-                    |
-                    |
-                =========
-                """;
-            case 5 -> """
-                +---+
-                |   |
-                O   |
-               /|\\  |
-                    |
-                    |
-                    |
-                =========
-                """;
-            case 6 -> """
-                +---+
-                |   |
-                O   |
-               /|\\  |
-               /    |
-                    |
-                    |
-                =========
-                """;
-            case 7 -> """
-                +---+
-                |   |
-                O   |
-               /|\\  |
-               / \\  |
-                    |
-                    |
-                =========
-                """;
-            case 8 -> """
-                +---+
-                |   |
-                O   |
-               /|\\  |
-               / \\  |
-               /    |
-                    |
-                =========
-                """;
-            case 9 -> """
-                +---+
-                |   |
-                O   |
-               /|\\  |
-               / \\  |
-               / \\  |
-                    |
-                =========
-                """;
-            case 10 -> """
-                +---+
-                |   |
-                O   |
-               /|\\  |
-               / \\  |
-               / \\  |
-                XXX
-                =========
-                ВЫ ПРОИГРАЛИ!
-                """;
-            default -> "Error";
-        };
-    }
-
-
 }
