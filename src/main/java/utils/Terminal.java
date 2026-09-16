@@ -3,11 +3,27 @@ package utils;
 import java.io.PrintStream;
 import java.util.Scanner;
 
+/**
+ * Обеспечивает взаимодействие игры с пользователем через потоки ввода и вывода.
+ * Класс выводит сообщения и изображение виселицы, считывает пользовательские данные
+ * и предоставляет доступ к загруженному словарю.
+ */
 public class Terminal {
-    PrintStream printer;
-    Scanner scan;
+    /** Загрузчик тематических словарей. */
     private final DictionaryLoader loader;
 
+    /** Поток для вывода сообщений пользователю. */
+    PrintStream printer;
+    /** Сканер для чтения пользовательского ввода. */
+    Scanner scan;
+
+    /**
+     * Создаёт объект для работы с терминалом.
+     *
+     * @param out поток для вывода сообщений
+     * @param scanner сканер для чтения пользовательского ввода
+     * @param wordLoader загрузчик тематических словарей
+     */
     public Terminal(PrintStream out, Scanner scanner, DictionaryLoader wordLoader){
         this.printer = out;
         this.scan = scanner;
@@ -15,11 +31,19 @@ public class Terminal {
     }
 
 
+    /**
+     * Выводит переданный объект с переводом строки.
+     *
+     * @param obj объект для вывода
+     */
     public void print(Object obj){
        printer.println(obj);
     }
 
 
+    /**
+     * Выводит список всех доступных тем словаря.
+     */
     public void printTopicsList() {
         for(String topic : loader.getTopicsList()){
             print(topic);
@@ -27,6 +51,12 @@ public class Terminal {
     }
 
 
+    /**
+     * Возвращает название темы по её номеру, повторно запрашивая номер при неверном значении.
+     *
+     * @param topicNumber выбранный пользователем номер темы
+     * @return название существующей темы
+     */
     public String getTopicName(int topicNumber) {
         String variant = "Выберите число от 1 до 24 включительно";
 
@@ -39,6 +69,12 @@ public class Terminal {
     }
 
 
+    /**
+     * Считывает первый символ введённой пользователем строки в нижнем регистре.
+     * При ошибке ввода повторяет запрос.
+     *
+     * @return первый корректно считанный символ
+     */
     public char getUserChar(){
         boolean success = false;
         char userChar = '_';
@@ -56,6 +92,11 @@ public class Terminal {
     }
 
 
+    /**
+     * Считывает целое число, повторяя запрос при вводе значения другого типа.
+     *
+     * @return корректно считанное целое число
+     */
     public int getUserInt() {
         boolean success = false;
         int userInt = -1;
@@ -75,10 +116,23 @@ public class Terminal {
     }
 
 
+    /**
+     * Возвращает слова, относящиеся к указанной теме.
+     *
+     * @param topic название темы
+     * @return массив слов выбранной темы
+     */
     public String[] getTopicWords(String topic) {
         return loader.getWords(topic);
     }
 
+
+    /**
+     * Выводит состояние виселицы, соответствующее текущему уровню ошибок.
+     * Для неизвестного уровня выводит сообщение {@code Error}.
+     *
+     * @param level текущий уровень ошибок от 1 до 10
+     */
     public void drawHangman(int level) {
         String hangman = switch (level) {
             case 1 -> """

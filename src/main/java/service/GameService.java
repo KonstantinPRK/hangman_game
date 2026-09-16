@@ -4,13 +4,26 @@ import model.*;
 import utils.*;
 import java.util.*;
 
+/**
+ * Создаёт игровые сессии и хранит запущенные игры.
+ * Реализован как одиночка, общий для всего приложения.
+ */
 public class GameService {
-    //пока что sessions никак не используется
+    /** Единственный экземпляр игрового сервиса. */
+    private static GameService gameService;
+
+    /** Игры, зарегистрированные по идентификаторам сессий. */
     private Map<Integer, Game> sessions;
+    /** Общий терминал для игровых сессий. */
     private Terminal terminal;
+    /** Загрузчик словарей, используемый терминалом. */
     private DictionaryLoader dictionaryLoader;
 
-    private static GameService gameService;
+    /**
+     * Возвращает единственный экземпляр игрового сервиса, создавая его при первом обращении.
+     *
+     * @return общий экземпляр {@code GameService}
+     */
     public static GameService getInstance() {
         if (gameService == null) {
             gameService = new GameService();
@@ -18,11 +31,18 @@ public class GameService {
         return gameService;
     }
 
+
+    /**
+     * Создаёт сервис и инициализирует его зависимости.
+     */
     private GameService(){
         initialize();
     }
 
 
+    /**
+     * Подготавливает хранилище сессий, словари и терминал.
+     */
     private void initialize(){
         sessions = new HashMap<>();
         dictionaryLoader = new DictionaryLoader();
@@ -30,6 +50,9 @@ public class GameService {
     }
 
 
+    /**
+     * Создаёт, регистрирует и запускает новую игровую сессию.
+     */
     public void startNewGameSession(){
         Game newGame = new Game(terminal, new WordConstructor(), new GameSession());
         int sessionID = newGame.getSession().getSessionID();

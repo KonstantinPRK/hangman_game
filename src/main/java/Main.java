@@ -1,10 +1,17 @@
 import service.*;
 
+/**
+ * Служит точкой входа в консольную игру «Виселица».
+ */
 public class Main {
+    /**
+     * Получает единственный экземпляр игрового сервиса и запускает новую игровую сессию.
+     *
+     * @param args аргументы командной строки; приложением не используются
+     */
     public static void main(String[] args){
             GameService gameService = GameService.getInstance();
 
-            //представим что в будущем его можно будет вызвать много раз для разных пользователей, пока что все в однопоточном режиме
             gameService.startNewGameSession();
     }
 
